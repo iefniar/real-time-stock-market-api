@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { auth } from "../lib/better-auth/auth.ts";
 import { inngest } from "../lib/inngest/client.ts";
 

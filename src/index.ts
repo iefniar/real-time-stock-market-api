@@ -32,7 +32,7 @@ async function startServer() {
   );
 
   app.use(
-    "/api/auth",
+    "/api/users",
     authRoutes
   );
 
