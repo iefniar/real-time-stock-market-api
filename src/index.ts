@@ -5,6 +5,7 @@ import { toNodeHandler } from "better-auth/node";
 import { connectToDatabase } from "./lib/db/dbConnection.ts";
 import { auth } from "./lib/better-auth/auth.ts";
 import { inngestHandler } from "./routes/inngest/route.ts";
+import authRoutes from "./routes/auth.routes.ts";
 
 const app = express();
 
@@ -28,6 +29,11 @@ async function startServer() {
   app.use(
     "/api/inngest",
     inngestHandler
+  );
+
+  app.use(
+    "/api/auth",
+    authRoutes
   );
 
   app.listen(process.env.HTTP_PORT, () => {
