@@ -1,11 +1,8 @@
-import type { Request, Response } from "express";
-import { auth } from "../lib/better-auth/auth.ts";
-import { inngest } from "../lib/inngest/client.ts";
+import type { Request, Response } from 'express'
+import { auth } from '../lib/better-auth/auth.ts'
+import { inngest } from '../lib/inngest/client.ts'
 
-export async function signUpWithEmail(
-  req: Request,
-  res: Response
-) {
+export async function signUpWithEmail (req: Request, res: Response) {
   try {
     const {
       email,
@@ -14,40 +11,39 @@ export async function signUpWithEmail(
       country,
       investmentGoals,
       riskTolerance,
-      preferredIndustry,
-    } = req.body;
+      preferredIndustry
+    } = req.body
 
     const response = await auth.api.signUpEmail({
       body: {
         email,
         password,
-        name: fullName,
-      },
-    });
+        name: fullName
+      }
+    })
 
     await inngest.send({
-        name: "app/user.created",
-        data: {
-            email,
-            name: fullName,
-            country,
-            investmentGoals,
-            riskTolerance,
-            preferredIndustry,
-        },
-    });
-    
+      name: 'app/user.created',
+      data: {
+        email,
+        name: fullName,
+        country,
+        investmentGoals,
+        riskTolerance,
+        preferredIndustry
+      }
+    })
+
     return res.status(201).json({
       success: true,
-      data: response,
-    });
-
+      data: response
+    })
   } catch (error) {
-    console.error("Sign up failed:", error);
+    console.error('Sign up failed:', error)
 
     return res.status(500).json({
       success: false,
-      error: "Sign up failed",
-    });
+      error: error instanceof Error ? error.message : 'Unknown error'
+    })
   }
 }
