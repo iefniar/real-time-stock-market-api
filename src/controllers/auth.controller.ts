@@ -14,12 +14,17 @@ export async function signUpWithEmail (req: Request, res: Response) {
       preferredIndustry
     } = req.body
 
-    const response = await auth.api.signUpEmail({
+    const authResponse = await auth.api.signUpEmail({
       body: {
         email,
         password,
         name: fullName
-      }
+      },
+      asResponse: true
+    })
+
+    authResponse.headers.forEach((value, key) => {
+      res.setHeader(key, value)
     })
 
     await inngest.send({
@@ -35,8 +40,7 @@ export async function signUpWithEmail (req: Request, res: Response) {
     })
 
     return res.status(201).json({
-      success: true,
-      data: response
+      success: true
     })
   } catch (error) {
     console.error('Sign up failed:', error)
