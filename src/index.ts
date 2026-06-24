@@ -6,6 +6,7 @@ import { connectToDatabase } from "./lib/db/dbConnection.ts";
 import { auth } from "./lib/better-auth/auth.ts";
 import { inngestHandler } from "./routes/inngest/route.ts";
 import authRoutes from "./routes/auth.routes.ts";
+import finnhubRoutes from "./routes/finnhub.routes.ts";
 
 const app = express();
 
@@ -34,6 +35,11 @@ async function startServer() {
   app.use(
     "/api/users",
     authRoutes
+  );
+
+  app.use(
+    "/api/finnhub",
+    finnhubRoutes
   );
 
   app.listen(process.env.HTTP_PORT, () => {
