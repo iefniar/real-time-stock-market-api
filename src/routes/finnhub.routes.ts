@@ -16,7 +16,7 @@ router.get(
 );
 
 router.get(
-  "/search",
+  "/stocks/search",
   searchStock
 );
 
