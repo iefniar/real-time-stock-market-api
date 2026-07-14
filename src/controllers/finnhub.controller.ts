@@ -1,63 +1,60 @@
-import type {
-  Request,
-  Response
-} from "express";
+import type { Request, Response } from 'express'
 
 import {
   getNews,
-  searchStocks
-} from "../services/finnhub.service.ts";
+  searchStocks,
+  getStocksDetails
+} from '../services/finnhub.service.ts'
 
-export async function getMarketNews(
-  req: Request,
-  res: Response
-) {
+import { getWatchlistSymbols } from '../services/watchlist.service.ts'
+
+export async function getMarketNews (req: Request, res: Response) {
   try {
-    const symbols =
-      req.query.symbols
-        ?.toString()
-        .split(",");
+    const symbols = req.query.symbols?.toString().split(',')
 
-    const news =
-      await getNews(
-        symbols
-      );
+    const news = await getNews(symbols)
 
-    res.json(news);
-
+    res.json(news)
   } catch {
-    res
-      .status(500)
-      .json({
-        error:
-          "Failed to get news",
-      });
+    res.status(500).json({
+      error: 'Failed to get news'
+    })
   }
 }
 
-export async function searchStock(
-  req: Request,
+export async function searchStock (req: Request, res: Response) {
+  try {
+    const query = req.query.q?.toString()
+
+    let watchlistSymbols: string[] = []
+
+    if (req.user) {
+      watchlistSymbols = await getWatchlistSymbols(req.user.id)
+    }
+
+    const stocks = await searchStocks(query, watchlistSymbols)
+
+    res.json(stocks)
+  } catch (error) {
+    console.error(error)
+
+    res.status(500).json({
+      error: 'Search failed'
+    })
+  }
+}
+
+export async function getStockDetails (
+  req: Request<{ symbol: string }>,
   res: Response
 ) {
   try {
-    const query =
-      req.query.q?.toString();
+    const stock = await getStocksDetails(req.params.symbol)
 
-    const results =
-      await searchStocks(
-        query
-      );
-
-    res.json(
-      results
-    );
-
+    res.json(stock)
   } catch {
-    res
-      .status(500)
-      .json({
-        error:
-          "Search failed",
-      });
+    res.status(500).json({
+      error: 'Failed to fetch stock details'
+    })
   }
 }

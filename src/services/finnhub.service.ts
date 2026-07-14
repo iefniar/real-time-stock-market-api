@@ -1,4 +1,11 @@
-import { getDateRange, validateArticle, formatArticle } from '../lib/utils.ts'
+import {
+  getDateRange,
+  validateArticle,
+  formatArticle,
+  formatPrice,
+  formatChangePercent,
+  formatMarketCapValue
+} from '../lib/utils.ts'
 
 import { POPULAR_STOCK_SYMBOLS } from '../types/constants.ts'
 
@@ -82,7 +89,10 @@ export async function getNews (symbols?: string[]) {
   }
 }
 
-export async function searchStocks (query?: string) {
+export async function searchStocks (
+  query?: string,
+  watchlistSymbols: string[] = []
+) {
   try {
     if (!FINNHUB_API_KEY) {
       return []
@@ -122,7 +132,7 @@ export async function searchStocks (query?: string) {
 
         type: 'Common Stock',
 
-        isInWatchlist: false
+        isInWatchlist: watchlistSymbols.includes(symbol.toUpperCase())
       }))
     }
 
@@ -143,7 +153,7 @@ export async function searchStocks (query?: string) {
 
         type: stock.type || 'Stock',
 
-        isInWatchlist: false
+        isInWatchlist: watchlistSymbols.includes(stock.symbol.toUpperCase())
       }))
       // no slice here → unlimited search results
     }
@@ -153,5 +163,61 @@ export async function searchStocks (query?: string) {
     console.error('searchStocks:', error)
 
     return []
+  }
+}
+
+export async function getStocksDetails (symbol: string) {
+  try {
+    if (!FINNHUB_API_KEY) {
+      throw new Error('FINNHUB_API_KEY missing')
+    }
+
+    const cleanSymbol = symbol.trim().toUpperCase()
+
+    const [quote, profile, financials] = await Promise.all([
+      fetchJSON<any>(
+        `${FINNHUB_BASE_URL}/quote?symbol=${cleanSymbol}&token=${FINNHUB_API_KEY}`
+      ),
+
+      fetchJSON<any>(
+        `${FINNHUB_BASE_URL}/stock/profile2?symbol=${cleanSymbol}&token=${FINNHUB_API_KEY}`
+      ),
+
+      fetchJSON<any>(
+        `${FINNHUB_BASE_URL}/stock/metric?symbol=${cleanSymbol}&metric=all&token=${FINNHUB_API_KEY}`
+      )
+    ])
+
+    if (!quote?.c || !profile?.name) {
+      throw new Error('Invalid stock data received from Finnhub')
+    }
+
+    const changePercent = quote.dp ?? 0
+
+    const peRatio = financials?.metric?.peNormalizedAnnual
+
+    return {
+      symbol: cleanSymbol,
+
+      company: profile.name,
+
+      currentPrice: quote.c,
+
+      changePercent,
+
+      priceFormatted: formatPrice(quote.c),
+
+      changeFormatted: formatChangePercent(changePercent),
+
+      peRatio: peRatio != null ? peRatio.toFixed(1) : '—',
+
+      marketCapFormatted: formatMarketCapValue(
+        profile.marketCapitalization ?? 0
+      )
+    }
+  } catch (error) {
+    console.error(`getStocksDetails(${symbol}):`, error)
+
+    throw error
   }
 }

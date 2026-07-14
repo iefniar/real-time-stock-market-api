@@ -93,14 +93,11 @@ export const formatArticle = (
 });
 
 export const formatChangePercent = (changePercent?: number) => {
-  if (!changePercent) return '';
-  const sign = changePercent > 0 ? '+' : '';
-  return `${sign}${changePercent.toFixed(2)}%`;
-};
+  if (changePercent == null) return '—';
 
-export const getChangeColorClass = (changePercent?: number) => {
-  if (!changePercent) return 'text-gray-400';
-  return changePercent > 0 ? 'text-green-500' : 'text-red-500';
+  const sign = changePercent > 0 ? '+' : '';
+
+  return `${sign}${changePercent.toFixed(2)}%`;
 };
 
 export const formatPrice = (price: number) => {

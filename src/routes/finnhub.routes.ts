@@ -1,23 +1,19 @@
-import {
-  Router
-} from "express";
+import { Router } from 'express'
 
 import {
   getMarketNews,
-  searchStock
-} from "../controllers/finnhub.controller.ts";
+  searchStock,
+  getStockDetails
+} from '../controllers/finnhub.controller.ts'
 
-const router =
-  Router();
+import { optionalAuth } from '../middleware/optionalAuth.middleware.ts'
 
-router.get(
-  "/news",
-  getMarketNews
-);
+const router = Router()
 
-router.get(
-  "/stocks/search",
-  searchStock
-);
+router.get('/news', getMarketNews)
 
-export default router;
+router.get('/stocks/search', optionalAuth, searchStock)
+
+router.get('/stocks/:symbol', getStockDetails)
+
+export default router
