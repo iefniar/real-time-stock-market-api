@@ -57,10 +57,17 @@ export async function addToWatchlist (
 }
 
 export async function removeFromWatchlist (userId: string, symbol: string) {
-  await Watchlist.deleteOne({
+  const result = await Watchlist.deleteOne({
     userId,
     symbol: symbol.toUpperCase()
   })
+
+  if (result.deletedCount === 0) {
+    return {
+      success: false,
+      message: 'Stock not found in watchlist'
+    }
+  }
 
   return {
     success: true,
