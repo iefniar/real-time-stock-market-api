@@ -6,7 +6,8 @@ import {
   addStock,
   removeStock,
   getWatchlist,
-  getWatchlistData
+  getWatchlistData,
+  toggleNewsViaEmailController
 } from '../controllers/watchlist.controller.ts'
 
 const router = Router()
@@ -21,5 +22,7 @@ router.delete('/:symbol', removeStock)
 router.get('/', getWatchlist)
 
 router.get('/data', getWatchlistData)
+
+router.patch('/:symbol/news-email', toggleNewsViaEmailController)
 
 export default router

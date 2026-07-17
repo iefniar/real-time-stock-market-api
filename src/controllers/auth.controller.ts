@@ -18,7 +18,11 @@ export async function signUpWithEmail (req: Request, res: Response) {
       body: {
         email,
         password,
-        name: fullName
+        name: fullName,
+        country,
+        investmentGoals,
+        riskTolerance,
+        preferredIndustry
       },
       asResponse: true
     })

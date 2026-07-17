@@ -45,7 +45,8 @@ export async function addToWatchlist (
   const item = new Watchlist({
     userId,
     symbol: symbol.toUpperCase(),
-    company: company.trim()
+    company: company.trim(),
+    isNewsViaEmailActive: false
   })
 
   await item.save()
@@ -125,16 +126,38 @@ export async function getWatchlistWithData (userId: string) {
           changeFormatted: stock.changeFormatted,
           changePercent: stock.changePercent,
           marketCap: stock.marketCapFormatted,
-          peRatio: stock.peRatio
+          peRatio: stock.peRatio,
+          isNewsViaEmailActive: item.isNewsViaEmailActive
         }
       } catch {
         return {
           company: item.company,
-          symbol: item.symbol
+          symbol: item.symbol,
+          isNewsViaEmailActive: item.isNewsViaEmailActive
         }
       }
     })
   )
 
   return stocks
+}
+
+export async function toggleNewsViaEmail (userId: string, symbol: string) {
+  const item = await Watchlist.findOne({
+    userId,
+    symbol: symbol.toUpperCase()
+  })
+
+  if (!item) {
+    throw new Error('Stock not found')
+  }
+
+  item.isNewsViaEmailActive = !item.isNewsViaEmailActive
+
+  await item.save()
+
+  return {
+    success: true,
+    isNewsViaEmailActive: item.isNewsViaEmailActive
+  }
 }

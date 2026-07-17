@@ -6,10 +6,11 @@ import {
   addToWatchlist,
   removeFromWatchlist,
   getWatchlistWithData,
-  getWatchlistSymbols
+  getWatchlistSymbols,
+  toggleNewsViaEmail
 } from '../services/watchlist.service.ts'
 
-type RemoveStockParams = {
+type SymbolStockParams = {
   symbol: string
 }
 
@@ -48,7 +49,7 @@ export async function addStock (req: Request, res: Response) {
 }
 
 export async function removeStock (
-  req: Request<RemoveStockParams>,
+  req: Request<SymbolStockParams>,
   res: Response
 ) {
   const user = await getUser(req)
@@ -88,4 +89,21 @@ export async function getWatchlistData (req: Request, res: Response) {
   const watchlist = await getWatchlistWithData(user.id)
 
   res.json(watchlist)
+}
+
+export async function toggleNewsViaEmailController (
+  req: Request<SymbolStockParams>,
+  res: Response
+) {
+  const user = await getUser(req)
+
+  if (!user) {
+    return res.status(401).json({
+      error: 'Unauthorized'
+    })
+  }
+
+  const result = await toggleNewsViaEmail(user.id, req.params.symbol)
+
+  res.json(result)
 }
