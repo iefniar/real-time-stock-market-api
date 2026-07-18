@@ -4,11 +4,18 @@ import {
   PERSONALIZED_WELCOME_EMAIL_PROMPT,
   NEWS_SUMMARY_EMAIL_PROMPT
 } from './prompts.ts'
-import { getAllUsersForNewsEmail } from '../../services/user.service.ts'
+import {
+  getAllUsersForNewsEmail,
+  getUsersWithNewsEmailEnabled
+} from '../../services/user.service.ts'
 import { getWatchlistSymbolsByEmail } from '../../services/watchlist.service.ts'
 import { getNews } from '../../services/finnhub.service.ts'
 import { getFormattedTodayDate } from '../utils.ts'
-import type { MarketNewsArticle, UserForNewsEmail } from '../../types/types.ts'
+import type {
+  MarketNewsArticle,
+  UserForNewsEmail,
+  UserWithNewsEmailEnabled
+} from '../../types/types.ts'
 
 export const sendSignUpEmail = inngest.createFunction(
   {
@@ -70,7 +77,7 @@ export const sendDailyNewsSummary = inngest.createFunction(
       {
         event: 'app/send.daily.news'
       },
-      { cron: '0 11 * * 1,5' }
+      { cron: '0 9 * * 1,5' } // run at 9:00 am every Monday and Friday
       //{ cron: '*/4 * * * *' } // run every 4 minutes
     ]
   },
@@ -168,6 +175,145 @@ export const sendDailyNewsSummary = inngest.createFunction(
     return {
       success: true,
       message: 'Daily news summary emails sent successfully'
+    }
+  }
+)
+
+export const sendEmailsToUsersWithNewsEnabled = inngest.createFunction(
+  {
+    id: 'emails-to-users-with-news-enabled',
+    triggers: [
+      {
+        event: 'app/send.emails.to.users.with.news.enabled'
+      },
+     { cron: '0 11 * * 1,5' } // run at 11:00 am every Monday and Friday
+     // { cron: '*/4 * * * *' } // run every 4 minutes
+    ]
+  },
+  async ({ step }) => {
+    /**
+     * STEP 1
+     * Get ONLY users that:
+     * - have at least one stock
+     * - AND that stock has isNewsViaEmailActive === true
+     */
+    const users = await step.run(
+      'get-users-with-news-enabled',
+      getUsersWithNewsEmailEnabled
+    )
+
+    if (!users.length) {
+      return {
+        success: true,
+        message: 'No users have news emails enabled.'
+      }
+    }
+
+    /**
+     * STEP 2
+     * Fetch company news for each user's enabled symbols
+     */
+    const userArticles = await step.run('fetch-news', async () => {
+      return await Promise.all(
+        users.map(async user => {
+          try {
+            let articles = await getNews(user.symbols)
+
+            articles = articles.slice(0, 6)
+
+            if (articles.length === 0) {
+              articles = (await getNews()).slice(0, 6)
+            }
+
+            return {
+              user,
+              articles
+            }
+          } catch (error) {
+            console.error(`Failed loading news for ${user.email}`, error)
+
+            return {
+              user,
+              articles: []
+            }
+          }
+        })
+      )
+    })
+
+    /**
+     * STEP 3
+     * AI summary
+     */
+    const summaries: Array<{
+      user: UserWithNewsEmailEnabled
+      newsContent: string | null
+    }> = []
+
+    for (const { user, articles } of userArticles) {
+      try {
+        const prompt = NEWS_SUMMARY_EMAIL_PROMPT.replace(
+          '{{newsData}}',
+          JSON.stringify(articles, null, 2)
+        )
+
+        const response = await step.ai.infer(`summarize-${user.id}`, {
+          model: step.ai.models.gemini({
+            model: 'gemini-2.5-flash-lite'
+          }),
+          body: {
+            contents: [
+              {
+                role: 'user',
+                parts: [
+                  {
+                    text: prompt
+                  }
+                ]
+              }
+            ]
+          }
+        })
+
+        const part = response.candidates?.[0]?.content?.parts?.[0]
+
+        summaries.push({
+          user,
+          newsContent:
+            (part && 'text' in part ? part.text : null) ?? 'No market news.'
+        })
+      } catch (error) {
+        console.error(`AI summary failed for ${user.email}`, error)
+
+        summaries.push({
+          user,
+          newsContent: null
+        })
+      }
+    }
+
+    /**
+     * STEP 4
+     * Send emails
+     */
+    await step.run('send-emails', async () => {
+      await Promise.all(
+        summaries.map(async ({ user, newsContent }) => {
+          if (!newsContent) return false
+
+          return await sendNewsSummaryEmail({
+            email: user.email,
+            date: getFormattedTodayDate(),
+            newsContent
+          })
+        })
+      )
+    })
+
+    return {
+      success: true,
+      usersProcessed: users.length,
+      emailsSent: summaries.filter(s => s.newsContent).length
     }
   }
 )

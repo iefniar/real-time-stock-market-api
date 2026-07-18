@@ -39,9 +39,15 @@ export type MarketNewsArticle = {
   image?: string
 }
 
-// My UserForNewsEmail type
 export type UserForNewsEmail = {
   id: string
   email: string
   name: string
+}
+
+export type UserWithNewsEmailEnabled = {
+  id: string
+  email: string
+  name: string
+  symbols: string[]
 }
