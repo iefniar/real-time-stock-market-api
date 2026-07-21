@@ -88,8 +88,8 @@ export const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html>
         }
     </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #050505; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #050505;">
+<body style="margin: 0; padding: 0; background-color: rgb(3, 7, 18); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: rgb(3, 7, 18);">
         <tr>
             <td align="center" class="mobile-outer-padding" style="padding: 40px 20px;">
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class="email-container" style="max-width: 600px; background-color: #141414; border-radius: 8px; border: 1px solid #30333A;">
@@ -113,7 +113,7 @@ export const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html>
                         <td class="mobile-padding" style="padding: 40px 40px 40px 40px;">
                             
                             <!-- Welcome Heading -->
-                            <h1 class="mobile-title dark-text" style="margin: 0 0 30px 0; font-size: 24px; font-weight: 600; color: #FDD458; line-height: 1.2;">
+                            <h1 class="mobile-title dark-text" style="margin: 0 0 30px 0; font-size: 24px; font-weight: 600; color: rgb(40, 19, 138); line-height: 1.2;">
                                 Welcome aboard {{name}}
                             </h1>
                             
@@ -141,7 +141,7 @@ export const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html>
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 40px 0; width: 100%;">
                                 <tr>
                                     <td align="center">
-                                        <a href="https://stock-market-dev.vercel.app/" style="display: block; width: 100%; background: linear-gradient(135deg, #FDD458 0%, #E8BA40 100%); color: #000000; text-decoration: none; padding: 16px 32px; border-radius: 8px; font-size: 16px; font-weight: 500; line-height: 1; text-align: center; box-sizing: border-box;">
+                                        <a href="#" style="display: block; width: 100%; background: rgb(40, 19, 138); color: rgb(238, 13, 223); text-decoration: none; padding: 16px 32px; border-radius: 8px; font-size: 16px; font-weight: 500; line-height: 1; text-align: center; box-sizing: border-box;">
                                             Go to Dashboard
                                         </a>
                                     </td>
@@ -150,9 +150,9 @@ export const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html>
                             
                             <!-- Footer Text -->
                             <p class="mobile-text dark-text-muted" style="margin: 40px 0 0 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important; text-align: center;">
-                               Real Time Stock Market HQ, 200 Market Street, San Francisco, CA 94105<br>
+                               Real Time Stock Market, Montevideo, Uruguay<br>
                                 <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Unsubscribe</a> | 
-                                <a href="https://stock-market-dev.vercel.app/" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a><br>
+                                <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a><br>
                                 © 2026 Real Time Stock Market
                             </p>
                         </td>
@@ -284,11 +284,11 @@ export const NEWS_SUMMARY_EMAIL_TEMPLATE = `<!DOCTYPE html>
                             <!-- Footer Text -->
                             <div style="text-align: center; margin: 40px 0 0 0;">
                                 <p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
-                                    You're receiving this because you subscribed to Real Time Stock Market news updates.
+                                    You're receiving this because you enabled news notifications for stocks in your watchlist.
                                 </p>
                                 <p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Unsubscribe</a> | 
-                                    <a href="https://signalist.app" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
+                                    <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
                                 </p>
                                 <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     © 2026 Real Time Stock Market
