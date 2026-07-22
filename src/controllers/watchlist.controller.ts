@@ -1,7 +1,5 @@
 import type { Request, Response } from 'express'
-
-import { auth } from '../lib/better-auth/auth.ts'
-
+import { getUser } from '../lib/auth-utils.ts'
 import {
   addToWatchlist,
   removeFromWatchlist,
@@ -12,24 +10,6 @@ import {
 
 type SymbolStockParams = {
   symbol: string
-}
-
-async function getUser (req: Request) {
-  const headers = new Headers()
-
-  for (const [key, value] of Object.entries(req.headers)) {
-    if (Array.isArray(value)) {
-      value.forEach(v => headers.append(key, v))
-    } else if (value !== undefined) {
-      headers.set(key, value)
-    }
-  }
-
-  const session = await auth.api.getSession({
-    headers
-  })
-
-  return session?.user
 }
 
 export async function addStock (req: Request, res: Response) {

@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth'
 import { mongodbAdapter } from 'better-auth/adapters/mongodb'
 import { mongoClient } from '../db/dbConnection.ts'
+import { Watchlist } from '../../models/watchlist.model.ts'
 
 export const auth = betterAuth({
   database: mongodbAdapter(mongoClient.db()),
@@ -16,6 +17,14 @@ export const auth = betterAuth({
     autoSignIn: true
   },
   user: {
+    deleteUser: {
+      enabled: true,
+      beforeDelete: async user => {
+        await Watchlist.deleteMany({
+          userId: user.id
+        })
+      }
+    },
     additionalFields: {
       country: {
         type: 'string',
