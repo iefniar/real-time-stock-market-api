@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { signUpWithEmail } from "../controllers/auth.controller.ts";
+import { sendWelcomeVerificationEmail } from "../controllers/auth.controller.ts";
 
 const router = Router();
 
 router.post(
   "/sign-up",
-  signUpWithEmail
+  sendWelcomeVerificationEmail
 );
 
 export default router;

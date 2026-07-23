@@ -4,6 +4,27 @@ export type WelcomeEmailData = {
   intro: string
 }
 
+export type WelcomeVerifyEmailData = {
+  email: string
+  name: string
+  intro: string
+  verificationUrl: string
+}
+
+export type VerificationEmailUser = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  country: string
+  investmentGoals: string
+  riskTolerance: string
+  preferredIndustry: string
+  createdAt: Date
+  updatedAt: Date
+}
+
 export type RawNewsArticle = {
   id: number
   headline?: string

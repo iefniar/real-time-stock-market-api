@@ -1,4 +1,4 @@
-import { sendWelcomeEmail, sendNewsSummaryEmail } from '../nodemailer/index.ts'
+import { sendWelcomeEmail, sendWelcomeVerifyEmail, sendNewsSummaryEmail } from '../nodemailer/index.ts'
 import { inngest } from './client.ts'
 import {
   PERSONALIZED_WELCOME_EMAIL_PROMPT,
@@ -66,6 +66,72 @@ export const sendSignUpEmail = inngest.createFunction(
     return {
       success: true,
       message: 'Welcome email sent successfully'
+    }
+  }
+)
+
+export const sendWelcomeVerificationEmail = inngest.createFunction(
+  {
+    id: 'welcome-verification-email',
+    triggers: [
+      {
+        event: 'app/user.verification-email'
+      }
+    ]
+  },
+
+  async ({ event, step }) => {
+    // Build a profile for Gemini
+    const userProfile = `
+      - Country: ${event.data.country}
+      - Investment goals: ${event.data.investmentGoals}
+      - Risk tolerance: ${event.data.riskTolerance}
+      - Preferred industry: ${event.data.preferredIndustry}
+    `
+
+    const prompt = PERSONALIZED_WELCOME_EMAIL_PROMPT.replace(
+      '{{userProfile}}',
+      userProfile
+    )
+
+    // Generate the personalized intro
+    const response = await step.ai.infer('generate-welcome-intro', {
+      model: step.ai.models.gemini({
+        model: 'gemini-2.5-flash-lite'
+      }),
+      body: {
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              {
+                text: prompt
+              }
+            ]
+          }
+        ]
+      }
+    })
+
+    // Send the email
+    await step.run('send-welcome-verification-email', async () => {
+      const part = response.candidates?.[0]?.content?.parts?.[0]
+
+      const introText =
+        (part && 'text' in part ? part.text : null) ??
+        'Thanks for creating your account. Verify your email to start tracking the stock market.'
+
+      return await sendWelcomeVerifyEmail({
+        email: event.data.email,
+        name: event.data.name,
+        intro: introText,
+        verificationUrl: event.data.verificationUrl
+      })
+    })
+
+    return {
+      success: true,
+      message: 'Welcome verification email sent successfully.'
     }
   }
 )
@@ -186,8 +252,8 @@ export const sendEmailsToUsersWithNewsEnabled = inngest.createFunction(
       {
         event: 'app/send.emails.to.users.with.news.enabled'
       },
-     { cron: '0 11 * * 1,5' } // run at 11:00 am every Monday and Friday
-     // { cron: '*/4 * * * *' } // run every 4 minutes
+      { cron: '0 11 * * 1,5' } // run at 11:00 am every Monday and Friday
+      // { cron: '*/4 * * * *' } // run every 4 minutes
     ]
   },
   async ({ step }) => {

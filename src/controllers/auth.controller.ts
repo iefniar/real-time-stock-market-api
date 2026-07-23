@@ -55,3 +55,52 @@ export async function signUpWithEmail (req: Request, res: Response) {
     })
   }
 }
+
+export async function sendWelcomeVerificationEmail (
+  req: Request,
+  res: Response
+) {
+  try {
+    const {
+      email,
+      password,
+      fullName,
+      country,
+      investmentGoals,
+      riskTolerance,
+      preferredIndustry
+    } = req.body
+
+    const authResponse = await auth.api.signUpEmail({
+      body: {
+        email,
+        password,
+        name: fullName,
+        country,
+        investmentGoals,
+        riskTolerance,
+        preferredIndustry,
+        callbackURL: `${process.env.FRONTEND_URL}/email-verified`
+      },
+      asResponse: true
+    })
+
+    // Forward Better Auth's headers (cookies, etc.)
+    authResponse.headers.forEach((value, key) => {
+      res.setHeader(key, value)
+    })
+
+    return res.status(201).json({
+      success: true,
+      message:
+        'Account created successfully. Please check your email to verify your account.'
+    })
+  } catch (error) {
+    console.error('Sign up failed:', error)
+
+    return res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    })
+  }
+}
