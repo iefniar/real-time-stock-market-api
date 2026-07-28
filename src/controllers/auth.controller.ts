@@ -104,3 +104,49 @@ export async function sendWelcomeVerificationEmail (
     })
   }
 }
+
+export async function forgotPassword (req: Request, res: Response) {
+  try {
+    const { email } = req.body
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        error: 'Email is required.'
+      })
+    }
+
+    // Convert Express headers to Fetch Headers
+    const headers = new Headers()
+
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (Array.isArray(value)) {
+        value.forEach(v => headers.append(key, v))
+      } else if (value !== undefined) {
+        headers.set(key, value)
+      }
+    }
+
+    await auth.api.requestPasswordReset({
+      body: {
+        email,
+        redirectTo: `${process.env.FRONTEND_URL}/reset-password`
+      },
+      headers
+    })
+
+    // Don't reveal whether the email exists (for security reasons).
+    return res.json({
+      success: true,
+      message:
+        'If an account with that email exists, a password reset link has been sent.'
+    })
+  } catch (error) {
+    console.error(error)
+
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to send password reset email.'
+    })
+  }
+}

@@ -374,6 +374,251 @@ export const WELCOME_VERIFY_EMAIL_TEMPLATE = `
 </html>
 `;
 
+export const RESET_PASSWORD_EMAIL_TEMPLATE = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="x-apple-disable-message-reformatting">
+
+    <title>Reset your password</title>
+
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:AllowPNG/>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+
+    <style>
+        @media (prefers-color-scheme: dark) {
+            .email-container {
+                background:#141414 !important;
+                border:1px solid #30333A !important;
+            }
+
+            .text {
+                color:#CCDADC !important;
+            }
+
+            .heading {
+                color:#ffffff !important;
+            }
+        }
+
+        @media only screen and (max-width:600px) {
+            .container-padding{
+                padding:24px !important;
+            }
+
+            .button{
+                width:100% !important;
+                display:block !important;
+                box-sizing:border-box !important;
+            }
+
+            h1{
+                font-size:26px !important;
+            }
+        }
+    </style>
+
+</head>
+
+<body style="margin:0;padding:0;background:#030712;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+
+<table width="100%" cellspacing="0" cellpadding="0" style="background:#030712;">
+<tr>
+
+<td align="center" style="padding:40px 20px;">
+
+<table
+class="email-container"
+width="100%"
+style="max-width:600px;background:#141414;border-radius:8px;border:1px solid #30333A;">
+
+<!-- Logo -->
+
+<tr>
+<td style="padding:40px 40px 20px 40px;">
+
+<img
+src="https://ik.imagekit.io/a6fkjou7d/logo.png?updatedAt=1756378431634"
+width="150"
+alt="Real Time Stock Market">
+
+</td>
+</tr>
+
+<!-- Dashboard -->
+
+<tr>
+<td align="center" style="padding:0 40px;">
+
+<img
+src="https://ik.imagekit.io/a6fkjou7d/dashboard-preview.png?updatedAt=1756378548102"
+style="width:100%;max-width:520px;border-radius:12px;border:1px solid #30333A;">
+
+</td>
+</tr>
+
+<!-- Content -->
+
+<tr>
+
+<td class="container-padding" style="padding:40px;">
+
+<h1
+class="heading"
+style="margin:0 0 24px;color:white;font-size:30px;">
+
+Reset your password
+
+</h1>
+
+<p class="text"
+style="font-size:16px;line-height:1.6;color:#CCDADC;">
+
+Hello <strong>{{name}}</strong>,
+
+</p>
+
+<p
+class="text"
+style="font-size:16px;line-height:1.7;color:#CCDADC;">
+
+We received a request to reset the password for your
+<strong>Real Time Stock Market</strong> account.
+
+</p>
+
+<p
+class="text"
+style="font-size:16px;line-height:1.7;color:#CCDADC;">
+
+Click the button below to choose a new password.
+
+</p>
+
+<table
+width="100%"
+style="margin:40px 0;">
+
+<tr>
+
+<td align="center">
+
+<a
+href="{{resetPasswordUrl}}"
+class="button"
+style="
+display:block;
+width:100%;
+background:rgb(40,19,138);
+color:rgb(238,13,223);
+text-decoration:none;
+padding:16px 32px;
+border-radius:8px;
+font-size:16px;
+font-weight:600;
+box-sizing:border-box;
+">
+
+Reset Password
+
+</a>
+
+</td>
+
+</tr>
+
+</table>
+
+<p
+class="text"
+style="font-size:16px;line-height:1.7;color:#CCDADC;">
+
+This link expires in <strong>1 hour</strong>.
+
+</p>
+
+<p
+    style="
+        margin-top:30px;
+        color:#CCDADC;
+        font-size:14px;
+        line-height:1.6;
+    "
+>
+    If the button doesn't work, copy and paste this link into your browser:
+</p>
+
+<p
+    style="
+        word-break:break-all;
+        font-size:13px;
+        color:#8b5cf6;
+    "
+>
+    {{resetPasswordUrl}}
+</p>
+
+<p
+class="text"
+style="font-size:16px;line-height:1.7;color:#CCDADC;">
+
+If you didn't request a password reset, you can safely ignore this email.
+Your password won't change unless you create a new one.
+
+</p>
+
+<hr
+style="
+margin:40px 0;
+border:none;
+border-top:1px solid #30333A;
+">
+
+<p
+style="
+font-size:13px;
+line-height:1.6;
+text-align:center;
+color:#9CA3AF;
+">
+
+Real Time Stock Market<br>
+
+Montevideo, Uruguay
+
+<br><br>
+
+© 2026 Real Time Stock Market
+
+</p>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>
+`;
+
 export const NEWS_SUMMARY_EMAIL_TEMPLATE = `<!DOCTYPE html>
 <html lang="en">
 <head>

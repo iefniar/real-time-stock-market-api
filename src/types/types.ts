@@ -25,6 +25,12 @@ export type VerificationEmailUser = {
   updatedAt: Date
 }
 
+export type ResetPasswordEmailData = {
+  email: string
+  name: string
+  resetPasswordUrl: string
+}
+
 export type RawNewsArticle = {
   id: number
   headline?: string

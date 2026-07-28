@@ -1,11 +1,13 @@
-import { Router } from "express";
-import { sendWelcomeVerificationEmail } from "../controllers/auth.controller.ts";
+import { Router } from 'express'
+import {
+  sendWelcomeVerificationEmail,
+  forgotPassword
+} from '../controllers/auth.controller.ts'
 
-const router = Router();
+const router = Router()
 
-router.post(
-  "/sign-up",
-  sendWelcomeVerificationEmail
-);
+router.post('/sign-up', sendWelcomeVerificationEmail)
 
-export default router;
+router.post('/forgot-password', forgotPassword)
+
+export default router

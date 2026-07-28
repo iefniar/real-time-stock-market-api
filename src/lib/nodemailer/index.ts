@@ -1,12 +1,14 @@
 import nodemailer from 'nodemailer'
 import type {
   WelcomeEmailData,
-  WelcomeVerifyEmailData
+  WelcomeVerifyEmailData,
+  ResetPasswordEmailData
 } from '../../types/types.ts'
 import {
   WELCOME_EMAIL_TEMPLATE,
   WELCOME_VERIFY_EMAIL_TEMPLATE,
-  NEWS_SUMMARY_EMAIL_TEMPLATE
+  NEWS_SUMMARY_EMAIL_TEMPLATE,
+  RESET_PASSWORD_EMAIL_TEMPLATE
 } from './templates.ts'
 
 export const transporter = nodemailer.createTransport({
@@ -44,7 +46,10 @@ export const sendWelcomeVerifyEmail = async ({
   intro,
   verificationUrl
 }: WelcomeVerifyEmailData) => {
-  const htmlTemplate = WELCOME_VERIFY_EMAIL_TEMPLATE.replaceAll('{{name}}', name)
+  const htmlTemplate = WELCOME_VERIFY_EMAIL_TEMPLATE.replaceAll(
+    '{{name}}',
+    name
+  )
     .replaceAll('{{intro}}', intro)
     .replaceAll('{{verificationUrl}}', verificationUrl)
 
@@ -84,6 +89,33 @@ export const sendNewsSummaryEmail = async ({
     to: email,
     subject: `📈 Market News Summary Today - ${date}`,
     text: `Today's market news summary from Real Time Stock Market`,
+    html: htmlTemplate
+  }
+
+  await transporter.sendMail(mailOptions)
+}
+
+export const sendResetPasswordEmail = async ({
+  email,
+  name,
+  resetPasswordUrl
+}: ResetPasswordEmailData): Promise<void> => {
+  const htmlTemplate = RESET_PASSWORD_EMAIL_TEMPLATE.replaceAll(
+    '{{name}}',
+    name
+  ).replaceAll('{{resetPasswordUrl}}', resetPasswordUrl)
+
+  const mailOptions = {
+    from: 'Real Time Stock Market',
+    to: email,
+    subject: 'Reset your password',
+
+    text:
+      `Hello ${name},\n\n` +
+      `We received a request to reset your password.\n\n` +
+      `Reset your password here:\n\n${resetPasswordUrl}\n\n` +
+      `If you didn't request this, you can safely ignore this email.`,
+
     html: htmlTemplate
   }
 

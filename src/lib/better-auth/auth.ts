@@ -4,6 +4,7 @@ import { mongoClient } from '../db/dbConnection.ts'
 import { Watchlist } from '../../models/watchlist.model.ts'
 import type { VerificationEmailUser } from '../../types/types.ts'
 import { inngest } from '../inngest/client.ts'
+import { sendResetPasswordEmail } from '../nodemailer/index.ts'
 
 export const auth = betterAuth({
   database: mongodbAdapter(mongoClient.db()),
@@ -16,7 +17,17 @@ export const auth = betterAuth({
     requireEmailVerification: true, // Don't allow login until verified
     minPasswordLength: 6,
     maxPasswordLength: 128,
-    autoSignIn: false // Don't automatically sign the user in after signup
+    autoSignIn: false, // Don't automatically sign the user in after signup
+    revokeSessionsOnPasswordReset: true, // Invalidate every session after a successful password reset
+    resetPasswordTokenExpiresIn: 60 * 60, // Password reset link expires after 1 hour
+
+    async sendResetPassword ({ user, url }) {
+      await sendResetPasswordEmail({
+        email: user.email,
+        name: user.name,
+        resetPasswordUrl: url
+      })
+    }
   },
   emailVerification: {
     sendOnSignUp: true,
