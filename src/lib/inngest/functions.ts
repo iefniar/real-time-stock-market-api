@@ -1,4 +1,8 @@
-import { sendWelcomeEmail, sendWelcomeVerifyEmail, sendNewsSummaryEmail } from '../nodemailer/index.ts'
+import {
+  sendWelcomeEmail,
+  sendWelcomeVerifyEmail,
+  sendNewsSummaryEmail
+} from '../nodemailer/index.ts'
 import { inngest } from './client.ts'
 import {
   PERSONALIZED_WELCOME_EMAIL_PROMPT,
@@ -10,6 +14,7 @@ import {
 } from '../../services/user.service.ts'
 import { getWatchlistSymbolsByEmail } from '../../services/watchlist.service.ts'
 import { getNews } from '../../services/finnhub.service.ts'
+import { getOrCreateDeleteToken } from '../../services/delete-token.service.ts'
 import { getFormattedTodayDate } from '../utils.ts'
 import type {
   MarketNewsArticle,
@@ -113,6 +118,13 @@ export const sendWelcomeVerificationEmail = inngest.createFunction(
       }
     })
 
+    // DeleteToken
+    const deleteToken = await step.run('generate-delete-token', async () => {
+      return await getOrCreateDeleteToken(event.data.userId)
+    })
+
+    const deleteUrl = `${process.env.FRONTEND_URL}/delete-account?token=${deleteToken}`
+
     // Send the email
     await step.run('send-welcome-verification-email', async () => {
       const part = response.candidates?.[0]?.content?.parts?.[0]
@@ -125,7 +137,8 @@ export const sendWelcomeVerificationEmail = inngest.createFunction(
         email: event.data.email,
         name: event.data.name,
         intro: introText,
-        verificationUrl: event.data.verificationUrl
+        verificationUrl: event.data.verificationUrl,
+        deleteUrl
       })
     })
 
@@ -367,10 +380,21 @@ export const sendEmailsToUsersWithNewsEnabled = inngest.createFunction(
         summaries.map(async ({ user, newsContent }) => {
           if (!newsContent) return false
 
+          // Delete Token
+          const deleteToken = await step.run(
+            `generate-delete-token-${user.id}`,
+            async () => {
+              return await getOrCreateDeleteToken(user.id)
+            }
+          )
+
+          const deleteUrl = `${process.env.FRONTEND_URL}/delete-account?token=${deleteToken}`
+
           return await sendNewsSummaryEmail({
             email: user.email,
             date: getFormattedTodayDate(),
-            newsContent
+            newsContent,
+            deleteUrl
           })
         })
       )

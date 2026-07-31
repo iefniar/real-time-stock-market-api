@@ -40,6 +40,7 @@ export const auth = betterAuth({
       await inngest.send({
         name: 'app/user.verification-email',
         data: {
+          userId: verificationUser.id,
           email: verificationUser.email,
           name: verificationUser.name,
           country: verificationUser.country,

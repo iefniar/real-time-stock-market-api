@@ -359,7 +359,7 @@ export const WELCOME_VERIFY_EMAIL_TEMPLATE = `
                             <!-- Footer Text -->
                             <p class="mobile-text dark-text-muted" style="margin: 40px 0 0 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important; text-align: center;">
                                Real Time Stock Market, Montevideo, Uruguay<br>
-                                <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Unsubscribe</a> | 
+                                <a href="{{deleteUrl}}" style="color: #CCDADC !important; text-decoration: underline;">Click here to delete your account</a> | 
                                 <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a><br>
                                 © 2026 Real Time Stock Market
                             </p>
@@ -741,7 +741,7 @@ export const NEWS_SUMMARY_EMAIL_TEMPLATE = `<!DOCTYPE html>
                                     You're receiving this because you enabled news notifications for stocks in your watchlist.
                                 </p>
                                 <p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
-                                    <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Unsubscribe</a> | 
+                                    <a href="{{deleteUrl}}" style="color: #CCDADC !important; text-decoration: underline;">Click here to delete your account</a> |     
                                     <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
                                 </p>
                                 <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">

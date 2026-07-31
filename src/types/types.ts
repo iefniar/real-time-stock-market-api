@@ -9,6 +9,7 @@ export type WelcomeVerifyEmailData = {
   name: string
   intro: string
   verificationUrl: string
+  deleteUrl: string
 }
 
 export type VerificationEmailUser = {

@@ -44,7 +44,8 @@ export const sendWelcomeVerifyEmail = async ({
   email,
   name,
   intro,
-  verificationUrl
+  verificationUrl,
+  deleteUrl
 }: WelcomeVerifyEmailData) => {
   const htmlTemplate = WELCOME_VERIFY_EMAIL_TEMPLATE.replaceAll(
     '{{name}}',
@@ -52,6 +53,7 @@ export const sendWelcomeVerifyEmail = async ({
   )
     .replaceAll('{{intro}}', intro)
     .replaceAll('{{verificationUrl}}', verificationUrl)
+    .replaceAll('{{deleteUrl}}', deleteUrl)
 
   const mailOptions = {
     from: 'Real Time Stock Market',
@@ -73,16 +75,22 @@ export const sendWelcomeVerifyEmail = async ({
 export const sendNewsSummaryEmail = async ({
   email,
   date,
-  newsContent
+  newsContent,
+  deleteUrl
 }: {
   email: string
   date: string
   newsContent: string
+  deleteUrl?: string
 }): Promise<void> => {
-  const htmlTemplate = NEWS_SUMMARY_EMAIL_TEMPLATE.replace(
+  let htmlTemplate = NEWS_SUMMARY_EMAIL_TEMPLATE.replace(
     '{{date}}',
     date
   ).replace('{{newsContent}}', newsContent)
+
+  if (deleteUrl) {
+    htmlTemplate = htmlTemplate.replace('{{deleteUrl}}', deleteUrl)
+  }
 
   const mailOptions = {
     from: 'Real Time Stock Market',
