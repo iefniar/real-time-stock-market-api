@@ -5,6 +5,10 @@ import { Watchlist } from '../../models/watchlist.model.ts'
 import type { VerificationEmailUser } from '../../types/types.ts'
 import { inngest } from '../inngest/client.ts'
 import { sendResetPasswordEmail } from '../nodemailer/index.ts'
+import {
+  canProceed,
+  incrementCounter
+} from '../../services/email-rate-limit.service.ts'
 
 export const auth = betterAuth({
   database: mongodbAdapter(mongoClient.db()),
@@ -22,11 +26,22 @@ export const auth = betterAuth({
     resetPasswordTokenExpiresIn: 60 * 60, // Password reset link expires after 1 hour
 
     async sendResetPassword ({ user, url }) {
+      const allowed = await canProceed('passwordReset')
+
+      if (!allowed) {
+        console.warn(`Password reset email limit reached for ${user.email}.`)
+
+        return
+      }
+
       await sendResetPasswordEmail({
         email: user.email,
         name: user.name,
         resetPasswordUrl: url
       })
+
+      await incrementCounter('passwordReset')
+      await incrementCounter('total')
     }
   },
   emailVerification: {

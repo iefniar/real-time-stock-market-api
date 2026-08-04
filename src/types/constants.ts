@@ -1,3 +1,10 @@
+export const EMAIL_LIMITS = {
+  total: 6,
+  signup: 2,
+  passwordReset: 2,
+  news: 2
+} as const
+
 export const POPULAR_STOCK_SYMBOLS = [
     // Tech Giants (the big technology companies)
     'AAPL',

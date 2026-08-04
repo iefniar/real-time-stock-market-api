@@ -15,12 +15,42 @@ import {
 import { getWatchlistSymbolsByEmail } from '../../services/watchlist.service.ts'
 import { getNews } from '../../services/finnhub.service.ts'
 import { getOrCreateDeleteToken } from '../../services/delete-token.service.ts'
+import {
+  resetCounter,
+  canProceed,
+  incrementCounter
+} from '../../services/email-rate-limit.service.ts'
 import { getFormattedTodayDate } from '../utils.ts'
 import type {
   MarketNewsArticle,
   UserForNewsEmail,
   UserWithNewsEmailEnabled
 } from '../../types/types.ts'
+
+export const resetEmailCounters = inngest.createFunction(
+  {
+    id: 'reset-email-counters',
+    triggers: [
+      {
+        cron: '0 0 * * *'
+      }
+    ]
+  },
+
+  async () => {
+    await Promise.all([
+      resetCounter('total'),
+      resetCounter('signup'),
+      resetCounter('passwordReset'),
+      resetCounter('news')
+    ])
+
+    return {
+      success: true,
+      message: 'Email counters reset successfully.'
+    }
+  }
+)
 
 export const sendSignUpEmail = inngest.createFunction(
   {
@@ -375,35 +405,50 @@ export const sendEmailsToUsersWithNewsEnabled = inngest.createFunction(
      * STEP 4
      * Send emails
      */
+    let emailsSent = 0
+
     await step.run('send-emails', async () => {
-      await Promise.all(
-        summaries.map(async ({ user, newsContent }) => {
-          if (!newsContent) return false
+      for (const { user, newsContent } of summaries) {
+        if (!newsContent) {
+          continue
+        }
 
-          // Delete Token
-          const deleteToken = await step.run(
-            `generate-delete-token-${user.id}`,
-            async () => {
-              return await getOrCreateDeleteToken(user.id)
-            }
-          )
+        const allowed = await canProceed('news')
 
-          const deleteUrl = `${process.env.FRONTEND_URL}/delete-account?token=${deleteToken}`
+        if (!allowed) {
+          console.warn('Daily news email limit reached.')
 
-          return await sendNewsSummaryEmail({
-            email: user.email,
-            date: getFormattedTodayDate(),
-            newsContent,
-            deleteUrl
-          })
+          break
+        }
+
+        // Delete Token
+        const deleteToken = await step.run(
+          `generate-delete-token-${user.id}`,
+          async () => {
+            return await getOrCreateDeleteToken(user.id)
+          }
+        )
+
+        const deleteUrl = `${process.env.FRONTEND_URL}/delete-account?token=${deleteToken}`
+
+        await sendNewsSummaryEmail({
+          email: user.email,
+          date: getFormattedTodayDate(),
+          newsContent,
+          deleteUrl
         })
-      )
+
+        await incrementCounter('news')
+        await incrementCounter('total')
+
+        emailsSent++
+      }
     })
 
     return {
       success: true,
       usersProcessed: users.length,
-      emailsSent: summaries.filter(s => s.newsContent).length
+      emailsSent
     }
   }
 )

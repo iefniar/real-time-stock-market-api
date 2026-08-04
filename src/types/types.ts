@@ -1,3 +1,5 @@
+export type EmailCategory = 'total' | 'signup' | 'passwordReset' | 'news'
+
 export type WelcomeEmailData = {
   email: string
   name: string

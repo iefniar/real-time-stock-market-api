@@ -1,6 +1,10 @@
 import type { Request, Response } from 'express'
 import { auth } from '../lib/better-auth/auth.ts'
 import { inngest } from '../lib/inngest/client.ts'
+import {
+  canProceed,
+  incrementCounter
+} from '../services/email-rate-limit.service.ts'
 
 export async function signUpWithEmail (req: Request, res: Response) {
   try {
@@ -13,6 +17,15 @@ export async function signUpWithEmail (req: Request, res: Response) {
       riskTolerance,
       preferredIndustry
     } = req.body
+
+    const canCreateAccount = await canProceed('signup')
+
+    if (!canCreateAccount) {
+      return res.status(429).json({
+        success: false,
+        message: 'The daily account creation limit has been reached.'
+      })
+    }
 
     const authResponse = await auth.api.signUpEmail({
       body: {
@@ -30,6 +43,9 @@ export async function signUpWithEmail (req: Request, res: Response) {
     authResponse.headers.forEach((value, key) => {
       res.setHeader(key, value)
     })
+
+    await incrementCounter('signup')
+    await incrementCounter('total')
 
     await inngest.send({
       name: 'app/user.created',
