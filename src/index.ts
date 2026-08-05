@@ -8,11 +8,19 @@ import { inngestHandler } from './routes/inngest/route.ts'
 import authRoutes from './routes/auth.routes.ts'
 import finnhubRoutes from './routes/finnhub.routes.ts'
 import watchlistRoutes from './routes/watchlist.routes.ts'
+import { initializeCounter } from './services/email-rate-limit.service.ts'
 
 const app = express()
 
 async function startServer () {
   await connectToDatabase()
+
+  await Promise.all([
+    initializeCounter('total'),
+    initializeCounter('signup'),
+    initializeCounter('passwordReset'),
+    initializeCounter('news')
+  ])
 
   app.use(
     cors({

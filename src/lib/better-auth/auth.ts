@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth'
 import { mongodbAdapter } from 'better-auth/adapters/mongodb'
 import { mongoClient } from '../db/dbConnection.ts'
 import { Watchlist } from '../../models/watchlist.model.ts'
+import { DeleteToken } from '../../models/delete-token.model.ts'
 import type { VerificationEmailUser } from '../../types/types.ts'
 import { inngest } from '../inngest/client.ts'
 import { sendResetPasswordEmail } from '../nodemailer/index.ts'
@@ -72,6 +73,11 @@ export const auth = betterAuth({
       enabled: true,
       beforeDelete: async user => {
         await Watchlist.deleteMany({
+          userId: user.id
+        })
+
+        // Delete permanent delete token
+        await DeleteToken.deleteMany({
           userId: user.id
         })
       }

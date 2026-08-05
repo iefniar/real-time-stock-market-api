@@ -422,12 +422,7 @@ export const sendEmailsToUsersWithNewsEnabled = inngest.createFunction(
         }
 
         // Delete Token
-        const deleteToken = await step.run(
-          `generate-delete-token-${user.id}`,
-          async () => {
-            return await getOrCreateDeleteToken(user.id)
-          }
-        )
+        const deleteToken = await getOrCreateDeleteToken(user.id)
 
         const deleteUrl = `${process.env.FRONTEND_URL}/delete-account?token=${deleteToken}`
 

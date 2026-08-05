@@ -6,6 +6,8 @@ import {
   incrementCounter
 } from '../services/email-rate-limit.service.ts'
 
+// The following function is the old signUpWithEmail (currently we are not using
+// this function to sign up users)
 export async function signUpWithEmail (req: Request, res: Response) {
   try {
     const {
@@ -17,15 +19,6 @@ export async function signUpWithEmail (req: Request, res: Response) {
       riskTolerance,
       preferredIndustry
     } = req.body
-
-    const canCreateAccount = await canProceed('signup')
-
-    if (!canCreateAccount) {
-      return res.status(429).json({
-        success: false,
-        message: 'The daily account creation limit has been reached.'
-      })
-    }
 
     const authResponse = await auth.api.signUpEmail({
       body: {
@@ -43,9 +36,6 @@ export async function signUpWithEmail (req: Request, res: Response) {
     authResponse.headers.forEach((value, key) => {
       res.setHeader(key, value)
     })
-
-    await incrementCounter('signup')
-    await incrementCounter('total')
 
     await inngest.send({
       name: 'app/user.created',
@@ -87,6 +77,15 @@ export async function sendWelcomeVerificationEmail (
       preferredIndustry
     } = req.body
 
+    const canCreateAccount = await canProceed('signup')
+
+    if (!canCreateAccount) {
+      return res.status(429).json({
+        success: false,
+        message: 'The daily account creation limit has been reached.'
+      })
+    }
+
     const authResponse = await auth.api.signUpEmail({
       body: {
         email,
@@ -105,6 +104,9 @@ export async function sendWelcomeVerificationEmail (
     authResponse.headers.forEach((value, key) => {
       res.setHeader(key, value)
     })
+
+    await incrementCounter('signup')
+    await incrementCounter('total')
 
     return res.status(201).json({
       success: true,
