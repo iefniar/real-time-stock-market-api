@@ -72,6 +72,9 @@ export const auth = betterAuth({
     deleteUser: {
       enabled: true,
       beforeDelete: async user => {
+        const db = mongoClient.db()
+
+        // Delete user's watchlist
         await Watchlist.deleteMany({
           userId: user.id
         })
@@ -79,6 +82,11 @@ export const auth = betterAuth({
         // Delete permanent delete token
         await DeleteToken.deleteMany({
           userId: user.id
+        })
+
+        // Delete Better Auth reset-password verification records
+        await db.collection('verification').deleteMany({
+          value: user.id
         })
       }
     },
