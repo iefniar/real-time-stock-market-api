@@ -1,9 +1,9 @@
-import { DeleteToken } from '../models/delete-token.model.ts'
+import { DeleteToken } from '../models/delete-token.model.js'
 import {
   generateToken,
   encryptToken,
   decryptToken
-} from '../lib/security/delete-token.ts'
+} from '../lib/security/delete-token.js'
 import crypto from 'crypto'
 
 // Returns the user's existing token. If none exists, a new one is created.

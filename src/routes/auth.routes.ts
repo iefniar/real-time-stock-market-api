@@ -2,8 +2,8 @@ import { Router } from 'express'
 import {
   sendWelcomeVerificationEmail,
   forgotPassword
-} from '../controllers/auth.controller.ts'
-import { deleteAccountByToken } from '../controllers/delete-account.controller.ts'
+} from '../controllers/auth.controller.js'
+import { deleteAccountByToken } from '../controllers/delete-account.controller.js'
 
 const router = Router()
 

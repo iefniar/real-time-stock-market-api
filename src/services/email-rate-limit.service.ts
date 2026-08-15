@@ -1,6 +1,6 @@
-import { EmailRateLimit } from '../models/email-rate-limit.model.ts'
-import { EMAIL_LIMITS } from '../types/constants.ts'
-import type { EmailCategory } from '../types/types.ts'
+import { EmailRateLimit } from '../models/email-rate-limit.model.js'
+import { EMAIL_LIMITS } from '../types/constants.js'
+import type { EmailCategory } from '../types/types.js'
 
 export async function initializeCounter (category: EmailCategory): Promise<void> {
   await EmailRateLimit.findOneAndUpdate(

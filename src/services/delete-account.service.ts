@@ -1,7 +1,7 @@
 import mongoose, { Types } from 'mongoose'
-import { User } from '../models/user.model.ts'
-import { Watchlist } from '../models/watchlist.model.ts'
-import { DeleteToken } from '../models/delete-token.model.ts'
+import { User } from '../models/user.model.js'
+import { Watchlist } from '../models/watchlist.model.js'
+import { DeleteToken } from '../models/delete-token.model.js'
 
 export async function deleteUserAccount (userId: string) {
   const session = await mongoose.startSession()

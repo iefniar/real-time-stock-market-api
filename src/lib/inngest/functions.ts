@@ -2,25 +2,25 @@ import {
   sendWelcomeEmail,
   sendWelcomeVerifyEmail,
   sendNewsSummaryEmail
-} from '../nodemailer/index.ts'
-import { inngest } from './client.ts'
+} from '../nodemailer/index.js'
+import { inngest } from './client.js'
 import {
   PERSONALIZED_WELCOME_EMAIL_PROMPT,
   NEWS_SUMMARY_EMAIL_PROMPT
-} from './prompts.ts'
+} from './prompts.js'
 import {
   getAllUsersForNewsEmail,
   getUsersWithNewsEmailEnabled
-} from '../../services/user.service.ts'
-import { getWatchlistSymbolsByEmail } from '../../services/watchlist.service.ts'
-import { getNews } from '../../services/finnhub.service.ts'
-import { getOrCreateDeleteToken } from '../../services/delete-token.service.ts'
+} from '../../services/user.service.js'
+import { getWatchlistSymbolsByEmail } from '../../services/watchlist.service.js'
+import { getNews } from '../../services/finnhub.service.js'
+import { getOrCreateDeleteToken } from '../../services/delete-token.service.js'
 import {
   resetCounter,
   canProceed,
   incrementCounter
-} from '../../services/email-rate-limit.service.ts'
-import { getFormattedTodayDate } from '../utils.ts'
+} from '../../services/email-rate-limit.service.js'
+import { getFormattedTodayDate } from '../utils.js'
 import type {
   MarketNewsArticle,
   UserForNewsEmail,

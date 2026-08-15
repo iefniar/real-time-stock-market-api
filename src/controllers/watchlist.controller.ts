@@ -1,12 +1,12 @@
 import type { Request, Response } from 'express'
-import { getUser } from '../lib/auth-utils.ts'
+import { getUser } from '../lib/auth-utils.js'
 import {
   addToWatchlist,
   removeFromWatchlist,
   getWatchlistWithData,
   getWatchlistSymbols,
   toggleNewsViaEmail
-} from '../services/watchlist.service.ts'
+} from '../services/watchlist.service.js'
 
 type SymbolStockParams = {
   symbol: string

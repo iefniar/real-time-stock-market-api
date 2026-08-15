@@ -9,7 +9,7 @@ import {
   WELCOME_VERIFY_EMAIL_TEMPLATE,
   NEWS_SUMMARY_EMAIL_TEMPLATE,
   RESET_PASSWORD_EMAIL_TEMPLATE
-} from './templates.ts'
+} from './templates.js'
 
 export const transporter = nodemailer.createTransport({
   service: 'gmail',

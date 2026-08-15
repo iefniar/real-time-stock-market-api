@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
-import { auth } from '../lib/better-auth/auth.ts'
+import { auth } from '../lib/better-auth/auth.js'
 
 export async function requireAuth (
   req: Request,

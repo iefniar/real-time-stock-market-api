@@ -5,9 +5,9 @@ import {
   formatPrice,
   formatChangePercent,
   formatMarketCapValue
-} from '../lib/utils.ts'
+} from '../lib/utils.js'
 
-import { POPULAR_STOCK_SYMBOLS } from '../types/constants.ts'
+import { POPULAR_STOCK_SYMBOLS } from '../types/constants.js'
 
 const FINNHUB_BASE_URL = process.env.FINNHUB_BASE_URL
 

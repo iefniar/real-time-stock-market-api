@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express'
 import crypto from 'node:crypto'
 
-import { DeleteToken } from '../models/delete-token.model.ts'
-import { deleteUserAccount } from '../services/delete-account.service.ts'
+import { DeleteToken } from '../models/delete-token.model.js'
+import { deleteUserAccount } from '../services/delete-account.service.js'
 
 export async function deleteAccountByToken (req: Request, res: Response) {
   try {

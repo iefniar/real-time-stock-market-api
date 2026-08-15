@@ -4,9 +4,9 @@ import {
   getMarketNews,
   searchStock,
   getStockDetails
-} from '../controllers/finnhub.controller.ts'
+} from '../controllers/finnhub.controller.js'
 
-import { optionalAuth } from '../middleware/optionalAuth.middleware.ts'
+import { optionalAuth } from '../middleware/optionalAuth.middleware.js'
 
 const router = Router()
 

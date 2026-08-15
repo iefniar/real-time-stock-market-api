@@ -1,5 +1,5 @@
-import { User } from "../models/user.model.ts";
-import { Watchlist } from "../models/watchlist.model.ts";
+import { User } from "../models/user.model.js";
+import { Watchlist } from "../models/watchlist.model.js";
 import type { UserWithNewsEmailEnabled } from "../types/types.ts";
 
 export async function getAllUsersForNewsEmail() {

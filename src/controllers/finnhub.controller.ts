@@ -4,9 +4,9 @@ import {
   getNews,
   searchStocks,
   getStocksDetails
-} from '../services/finnhub.service.ts'
+} from '../services/finnhub.service.js'
 
-import { getWatchlistSymbols } from '../services/watchlist.service.ts'
+import { getWatchlistSymbols } from '../services/watchlist.service.js'
 
 export async function getMarketNews (req: Request, res: Response) {
   try {

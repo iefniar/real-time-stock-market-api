@@ -1,6 +1,6 @@
-import { User } from '../models/user.model.ts'
-import { Watchlist } from '../models/watchlist.model.ts'
-import { getStocksDetails } from './finnhub.service.ts'
+import { User } from '../models/user.model.js'
+import { Watchlist } from '../models/watchlist.model.js'
+import { getStocksDetails } from './finnhub.service.js'
 
 export async function getWatchlistSymbolsByEmail (
   email: string

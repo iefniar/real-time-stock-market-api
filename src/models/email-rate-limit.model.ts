@@ -1,5 +1,5 @@
 import mongoose, { Schema, model, type Document, type Model } from 'mongoose'
-import { type EmailCategory } from '../types/types.ts'
+import type { EmailCategory } from '../types/types.ts'
 
 export interface EmailRateLimitDocument extends Document {
   category: EmailCategory

@@ -1,0 +1,126 @@
+import { User } from '../models/user.model.js';
+import { Watchlist } from '../models/watchlist.model.js';
+import { getStocksDetails } from './finnhub.service.js';
+export async function getWatchlistSymbolsByEmail(email) {
+    if (!email)
+        return [];
+    try {
+        const user = await User.findOne({ email }, { _id: 1 }).lean();
+        if (!user)
+            return [];
+        const items = await Watchlist.find({ userId: user._id.toString() }, { symbol: 1, _id: 0 }).lean();
+        return items.map(item => item.symbol);
+    }
+    catch (error) {
+        console.error('getWatchlistSymbolsByEmail error:', error);
+        return [];
+    }
+}
+export async function addToWatchlist(userId, symbol, company) {
+    const existing = await Watchlist.findOne({
+        userId,
+        symbol: symbol.toUpperCase()
+    });
+    if (existing) {
+        return {
+            success: false,
+            error: 'Stock already in watchlist'
+        };
+    }
+    const item = new Watchlist({
+        userId,
+        symbol: symbol.toUpperCase(),
+        company: company.trim(),
+        isNewsViaEmailActive: false
+    });
+    await item.save();
+    return {
+        success: true,
+        message: 'Stock added to watchlist'
+    };
+}
+export async function removeFromWatchlist(userId, symbol) {
+    const result = await Watchlist.deleteOne({
+        userId,
+        symbol: symbol.toUpperCase()
+    });
+    if (result.deletedCount === 0) {
+        return {
+            success: false,
+            message: 'Stock not found in watchlist'
+        };
+    }
+    return {
+        success: true,
+        message: 'Stock removed from watchlist'
+    };
+}
+export async function getUserWatchlist(userId) {
+    return await Watchlist.find({
+        userId
+    })
+        .sort({
+        addedAt: -1
+    })
+        .lean();
+}
+export async function getWatchlistSymbols(userId) {
+    const watchlist = await Watchlist.find({
+        userId
+    }, {
+        symbol: 1,
+        _id: 0
+    });
+    return watchlist.map(item => item.symbol);
+}
+export async function getWatchlistWithData(userId) {
+    const watchlist = await Watchlist.find({
+        userId
+    })
+        .sort({
+        addedAt: -1
+    })
+        .lean();
+    if (!watchlist.length) {
+        return [];
+    }
+    const stocks = await Promise.all(watchlist.map(async (item) => {
+        try {
+            const stock = await getStocksDetails(item.symbol);
+            return {
+                company: stock.company,
+                symbol: stock.symbol,
+                currentPrice: stock.currentPrice,
+                priceFormatted: stock.priceFormatted,
+                changeFormatted: stock.changeFormatted,
+                changePercent: stock.changePercent,
+                marketCap: stock.marketCapFormatted,
+                peRatio: stock.peRatio,
+                isNewsViaEmailActive: item.isNewsViaEmailActive
+            };
+        }
+        catch {
+            return {
+                company: item.company,
+                symbol: item.symbol,
+                isNewsViaEmailActive: item.isNewsViaEmailActive
+            };
+        }
+    }));
+    return stocks;
+}
+export async function toggleNewsViaEmail(userId, symbol) {
+    const item = await Watchlist.findOne({
+        userId,
+        symbol: symbol.toUpperCase()
+    });
+    if (!item) {
+        throw new Error('Stock not found');
+    }
+    item.isNewsViaEmailActive = !item.isNewsViaEmailActive;
+    await item.save();
+    return {
+        success: true,
+        isNewsViaEmailActive: item.isNewsViaEmailActive
+    };
+}

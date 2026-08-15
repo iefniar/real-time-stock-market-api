@@ -1,15 +1,15 @@
 import { betterAuth } from 'better-auth'
 import { mongodbAdapter } from 'better-auth/adapters/mongodb'
-import { mongoClient } from '../db/dbConnection.ts'
-import { Watchlist } from '../../models/watchlist.model.ts'
-import { DeleteToken } from '../../models/delete-token.model.ts'
-import type { VerificationEmailUser } from '../../types/types.ts'
-import { inngest } from '../inngest/client.ts'
-import { sendResetPasswordEmail } from '../nodemailer/index.ts'
+import { mongoClient } from '../db/dbConnection.js'
+import { Watchlist } from '../../models/watchlist.model.js'
+import { DeleteToken } from '../../models/delete-token.model.js'
+import type { VerificationEmailUser } from '../../types/types.js'
+import { inngest } from '../inngest/client.js'
+import { sendResetPasswordEmail } from '../nodemailer/index.js'
 import {
   canProceed,
   incrementCounter
-} from '../../services/email-rate-limit.service.ts'
+} from '../../services/email-rate-limit.service.js'
 
 export const auth = betterAuth({
   database: mongodbAdapter(mongoClient.db()),

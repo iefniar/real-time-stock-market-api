@@ -1,5 +1,5 @@
 import type { Request } from 'express'
-import { auth } from './better-auth/auth.ts'
+import { auth } from './better-auth/auth.js'
 
 export async function getUser (req: Request) {
   const headers = new Headers()

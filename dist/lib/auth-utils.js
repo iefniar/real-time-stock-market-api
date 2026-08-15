@@ -1,0 +1,16 @@
+import { auth } from './better-auth/auth.js';
+export async function getUser(req) {
+    const headers = new Headers();
+    for (const [key, value] of Object.entries(req.headers)) {
+        if (Array.isArray(value)) {
+            value.forEach(v => headers.append(key, v));
+        }
+        else if (value !== undefined) {
+            headers.set(key, value);
+        }
+    }
+    const session = await auth.api.getSession({
+        headers
+    });
+    return session?.user;
+}

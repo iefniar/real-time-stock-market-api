@@ -2,12 +2,12 @@
 import express from 'express'
 import cors from 'cors'
 import { toNodeHandler } from 'better-auth/node'
-import { connectToDatabase } from './lib/db/dbConnection.ts'
-import { auth } from './lib/better-auth/auth.ts'
-import { inngestHandler } from './routes/inngest/route.ts'
-import authRoutes from './routes/auth.routes.ts'
-import finnhubRoutes from './routes/finnhub.routes.ts'
-import watchlistRoutes from './routes/watchlist.routes.ts'
+import { connectToDatabase } from './lib/db/dbConnection.js'
+import { auth } from './lib/better-auth/auth.js'
+import { inngestHandler } from './routes/inngest/route.js'
+import authRoutes from './routes/auth.routes.js'
+import finnhubRoutes from './routes/finnhub.routes.js'
+import watchlistRoutes from './routes/watchlist.routes.js'
 
 const app = express()
 

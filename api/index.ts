@@ -1,4 +1,4 @@
 // Expose the Express application to Vercel
-import app from '../src/app.ts'
+import app from '../dist/app.js'
 
 export default app

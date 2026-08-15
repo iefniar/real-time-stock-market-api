@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { requireAuth } from '../middleware/auth.middleware.ts'
+import { requireAuth } from '../middleware/auth.middleware.js'
 
 import {
   addStock,
@@ -8,7 +8,7 @@ import {
   getWatchlist,
   getWatchlistData,
   toggleNewsViaEmailController
-} from '../controllers/watchlist.controller.ts'
+} from '../controllers/watchlist.controller.js'
 
 const router = Router()
 

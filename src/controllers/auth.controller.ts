@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express'
-import { auth } from '../lib/better-auth/auth.ts'
-import { inngest } from '../lib/inngest/client.ts'
+import { auth } from '../lib/better-auth/auth.js'
+import { inngest } from '../lib/inngest/client.js'
 import {
   canProceed,
   incrementCounter
-} from '../services/email-rate-limit.service.ts'
+} from '../services/email-rate-limit.service.js'
 
 // The following function is the old signUpWithEmail (currently we are not using
 // this function to sign up users)
