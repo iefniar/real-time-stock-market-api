@@ -11,5 +11,8 @@
     "allowImportingTsExtensions": true, // Allows importing TypeScript files without specifying the extension
     "noEmit": true, // Do not emit outputs
   },
-  "include": ["src/**/*"] 
+  "include": [
+    "src/**/*.ts",
+    "api/**/*.ts"
+  ]
 }

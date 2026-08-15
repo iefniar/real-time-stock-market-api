@@ -1,26 +1,41 @@
-import mongoose from "mongoose";
-import { MongoClient } from "mongodb";
+import mongoose from 'mongoose'
+import { MongoClient } from 'mongodb'
 
-const uri = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URI
 
 if (!uri) {
-  throw new Error("MONGODB_URI is not defined");
+  throw new Error('MONGODB_URI is not defined')
 }
 
-const mongoUri: string = uri;
+const mongoUri = uri
 
-export const mongoClient = new MongoClient(mongoUri);
+export const mongoClient = new MongoClient(mongoUri)
 
-export async function connectToDatabase() {
+let mongoClientConnected = false
+
+export async function connectToDatabase(): Promise<void> {
+  const mongooseConnected = mongoose.connection.readyState === 1
+
+  if (mongooseConnected && mongoClientConnected) {
+    return
+  }
+
   try {
-    await Promise.all([
-      mongoose.connect(mongoUri),
-      mongoClient.connect(),
-    ]);
+    if (!mongooseConnected) {
+      await mongoose.connect(mongoUri)
+    }
 
-    console.log("Connected to DB");
+    if (!mongoClientConnected) {
+      await mongoClient.connect()
+      mongoClientConnected = true
+    }
+
+    console.log('Connected to DB')
   } catch (error) {
-    console.error("Failed to connect to DB:", error);
-    process.exit(1);
+    console.error('Failed to connect to DB:', error)
+
+    mongoClientConnected = false
+
+    throw error
   }
 }
