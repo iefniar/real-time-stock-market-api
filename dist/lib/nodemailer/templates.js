@@ -97,14 +97,14 @@ export const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html>
                     <!-- Header with Logo -->
                     <tr>
                         <td align="left" class="mobile-header-padding" style="padding: 40px 40px 20px 40px;">
-                            <img src="https://ik.imagekit.io/a6fkjou7d/logo.png?updatedAt=1756378431634" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
+                            <img src="https://real-time-stock-market-mvp.vercel.app/logo-with-text.png" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
                         </td>
                     </tr>
                     
                     <!-- Dashboard Preview Image -->
                     <tr>
                         <td align="center" class="dashboard-preview" style="padding: 40px 40px 0px 40px;">
-                            <img src="https://ik.imagekit.io/a6fkjou7d/dashboard-preview.png?updatedAt=1756378548102" alt="Real Time Stock Market Dashboard Preview" width="100%" style="max-width: 520px; width: 100%; height: auto; border-radius: 12px; border: 1px solid #30333A;">
+                            <img src="https://real-time-stock-market-mvp.vercel.app/screenshot-for-email.png" alt="Real Time Stock Market Dashboard Preview" width="100%" style="max-width: 520px; width: 100%; height: auto; border-radius: 12px; border: 1px solid #30333A;">
                         </td>
                     </tr>
                     
@@ -152,7 +152,7 @@ export const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html>
                             <p class="mobile-text dark-text-muted" style="margin: 40px 0 0 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important; text-align: center;">
                                Real Time Stock Market, Montevideo, Uruguay<br>
                                 <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Unsubscribe</a> | 
-                                <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a><br>
+                                <a href="https://real-time-stock-market-mvp.vercel.app" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a><br>
                                 © 2026 Real Time Stock Market
                             </p>
                         </td>
@@ -264,14 +264,14 @@ export const WELCOME_VERIFY_EMAIL_TEMPLATE = `
                     <!-- Header with Logo -->
                     <tr>
                         <td align="left" class="mobile-header-padding" style="padding: 40px 40px 20px 40px;">
-                            <img src="https://ik.imagekit.io/a6fkjou7d/logo.png?updatedAt=1756378431634" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
+                            <img src="https://real-time-stock-market-mvp.vercel.app/logo-with-text.png" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
                         </td>
                     </tr>
                     
                     <!-- Dashboard Preview Image -->
                     <tr>
                         <td align="center" class="dashboard-preview" style="padding: 40px 40px 0px 40px;">
-                            <img src="https://ik.imagekit.io/a6fkjou7d/dashboard-preview.png?updatedAt=1756378548102" alt="Real Time Stock Market Dashboard Preview" width="100%" style="max-width: 520px; width: 100%; height: auto; border-radius: 12px; border: 1px solid #30333A;">
+                            <img src="https://real-time-stock-market-mvp.vercel.app/screenshot-for-email.png" alt="Real Time Stock Market Dashboard Preview" width="100%" style="max-width: 520px; width: 100%; height: auto; border-radius: 12px; border: 1px solid #30333A;">
                         </td>
                     </tr>
                     
@@ -359,7 +359,7 @@ export const WELCOME_VERIFY_EMAIL_TEMPLATE = `
                             <p class="mobile-text dark-text-muted" style="margin: 40px 0 0 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important; text-align: center;">
                                Real Time Stock Market, Montevideo, Uruguay<br>
                                 <a href="{{deleteUrl}}" style="color: #CCDADC !important; text-decoration: underline;">Click here to delete your account</a> | 
-                                <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a><br>
+                                <a href="https://real-time-stock-market-mvp.vercel.app" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a><br>
                                 © 2026 Real Time Stock Market
                             </p>
                         </td>
@@ -446,7 +446,7 @@ style="max-width:600px;background:#141414;border-radius:8px;border:1px solid #30
 <td style="padding:40px 40px 20px 40px;">
 
 <img
-src="https://ik.imagekit.io/a6fkjou7d/logo.png?updatedAt=1756378431634"
+src="https://real-time-stock-market-mvp.vercel.app/logo-with-text.png"
 width="150"
 alt="Real Time Stock Market">
 
@@ -459,7 +459,7 @@ alt="Real Time Stock Market">
 <td align="center" style="padding:0 40px;">
 
 <img
-src="https://ik.imagekit.io/a6fkjou7d/dashboard-preview.png?updatedAt=1756378548102"
+src="https://real-time-stock-market-mvp.vercel.app/screenshot-for-email.png"
 style="width:100%;max-width:520px;border-radius:12px;border:1px solid #30333A;">
 
 </td>
@@ -711,7 +711,7 @@ export const NEWS_SUMMARY_EMAIL_TEMPLATE = `<!DOCTYPE html>
                     <!-- Header with Logo -->
                     <tr>
                         <td align="left" class="mobile-header-padding" style="padding: 40px 40px 20px 40px;">
-                            <img src="https://ik.imagekit.io/a6fkjou7d/logo.png?updatedAt=1756378431634" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
+                            <img src="https://real-time-stock-market-mvp.vercel.app/logo-with-text.png" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
                         </td>
                     </tr>
                     
@@ -739,7 +739,7 @@ export const NEWS_SUMMARY_EMAIL_TEMPLATE = `<!DOCTYPE html>
                                 </p>
                                 <p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     <a href="{{deleteUrl}}" style="color: #CCDADC !important; text-decoration: underline;">Click here to delete your account</a> |     
-                                    <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
+                                    <a href="https://real-time-stock-market-mvp.vercel.app" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
                                 </p>
                                 <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     © 2026 Real Time Stock Market
@@ -860,7 +860,7 @@ export const STOCK_ALERT_UPPER_EMAIL_TEMPLATE = `<!DOCTYPE html>
                     <!-- Header with Logo -->
                     <tr>
                         <td align="left" class="mobile-header-padding" style="padding: 40px 40px 20px 40px;">
-                            <img src="https://ik.imagekit.io/a6fkjou7d/logo.png?updatedAt=1756378431634" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
+                            <img src="https://real-time-stock-market-mvp.vercel.app/logo-with-text.png" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
                         </td>
                     </tr>
                     
@@ -947,7 +947,7 @@ export const STOCK_ALERT_UPPER_EMAIL_TEMPLATE = `<!DOCTYPE html>
                                 </p>
                                 <p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Unsubscribe</a> | 
-                                    <a href="https://signalist.app" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
+                                    <a href="https://real-time-stock-market-mvp.vercel.app" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
                                 </p>
                                 <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     © 2026 Real Time Stock Market
@@ -1068,7 +1068,7 @@ export const STOCK_ALERT_LOWER_EMAIL_TEMPLATE = `<!DOCTYPE html>
                     <!-- Header with Logo -->
                     <tr>
                         <td align="left" class="mobile-header-padding" style="padding: 40px 40px 20px 40px;">
-                            <img src="https://ik.imagekit.io/a6fkjou7d/logo.png?updatedAt=1756378431634" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
+                            <img src="https://real-time-stock-market-mvp.vercel.app/logo-with-text.png" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
                         </td>
                     </tr>
                     
@@ -1155,7 +1155,7 @@ export const STOCK_ALERT_LOWER_EMAIL_TEMPLATE = `<!DOCTYPE html>
                                 </p>
                                 <p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Unsubscribe</a> | 
-                                    <a href="https://signalist.app" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
+                                    <a href="https://real-time-stock-market-mvp.vercel.app" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
                                 </p>
                                 <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     © 2026 Real Time Stock Market
@@ -1267,7 +1267,7 @@ export const VOLUME_ALERT_EMAIL_TEMPLATE = `<!DOCTYPE html>
                     <!-- Header with Logo -->
                     <tr>
                         <td align="left" class="mobile-header-padding" style="padding: 40px 40px 20px 40px;">
-                            <img src="https://ik.imagekit.io/a6fkjou7d/logo.png?updatedAt=1756378431634" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
+                            <img src="https://real-time-stock-market-mvp.vercel.app/logo-with-text.png" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
                         </td>
                     </tr>
                     
@@ -1374,7 +1374,7 @@ export const VOLUME_ALERT_EMAIL_TEMPLATE = `<!DOCTYPE html>
                                 </p>
                                 <p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     <a href="#" style="color: #CCDADC !important; text-decoration: underline;">Unsubscribe</a> | 
-                                    <a href="https://signalist.app" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
+                                    <a href="https://real-time-stock-market-mvp.vercel.app" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
                                 </p>
                                 <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     © 2026 Real Time Stock Market
@@ -1489,7 +1489,7 @@ export const INACTIVE_USER_REMINDER_EMAIL_TEMPLATE = `<!DOCTYPE html>
                     <!-- Header with Logo -->
                     <tr>
                         <td align="left" class="mobile-header-padding" style="padding: 40px 40px 20px 40px;">
-                            <img src="https://ik.imagekit.io/a6fkjou7d/logo.png?updatedAt=1756378431634" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
+                            <img src="https://real-time-stock-market-mvp.vercel.app/logo-with-text.png" alt="Real Time Stock Market Logo" width="150" style="max-width: 100%; height: auto;">
                         </td>
                     </tr>
                     
@@ -1540,7 +1540,7 @@ export const INACTIVE_USER_REMINDER_EMAIL_TEMPLATE = `<!DOCTYPE html>
                                 </p>
                                 <p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     <a href="{{unsubscribeUrl}}" style="color: #CCDADC !important; text-decoration: underline;">Unsubscribe</a> | 
-                                    <a href="{{dashboardUrl}}" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
+                                    <a href="https://real-time-stock-market-mvp.vercel.app" style="color: #CCDADC !important; text-decoration: underline;">Visit Real Time Stock Market</a>
                                 </p>
                                 <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #CCDADC !important;">
                                     © 2026 Real Time Stock Market
