@@ -34,6 +34,7 @@ export const auth = betterAuth({
     resetPasswordTokenExpiresIn: 60 * 60, // Password reset link expires after 1 hour
 
     async sendResetPassword ({ user, url }) {
+      // Second check: Make sure we still have permission to actually send an email.
       const allowed = await canProceed('passwordReset')
 
       if (!allowed) {
@@ -42,12 +43,14 @@ export const auth = betterAuth({
         return
       }
 
+      // Send the actual email
       await sendResetPasswordEmail({
         email: user.email,
         name: user.name,
         resetPasswordUrl: url
       })
 
+      // Only increment after Nodemailer successfully completes.
       await incrementCounter('passwordReset')
       await incrementCounter('total')
     }
