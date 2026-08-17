@@ -30,9 +30,12 @@ export async function addToWatchlist (
   symbol: string,
   company: string
 ) {
+  const normalizedSymbol = symbol.toUpperCase()
+
+  // Check if the stock is already in the user's watchlist
   const existing = await Watchlist.findOne({
     userId,
-    symbol: symbol.toUpperCase()
+    symbol: normalizedSymbol
   })
 
   if (existing) {
@@ -42,9 +45,22 @@ export async function addToWatchlist (
     }
   }
 
+  // Maximum of 5 stocks per user
+  const watchlistCount = await Watchlist.countDocuments({
+    userId
+  })
+
+  if (watchlistCount >= 5) {
+    return {
+      success: false,
+      error: 'You can only have up to 5 stocks in your watchlist'
+    }
+  }
+
+  // Add the stock
   const item = new Watchlist({
     userId,
-    symbol: symbol.toUpperCase(),
+    symbol: normalizedSymbol,
     company: company.trim(),
     isNewsViaEmailActive: false
   })
