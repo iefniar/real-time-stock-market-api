@@ -112,10 +112,17 @@ export async function getWatchlistWithData(userId) {
                 isNewsViaEmailActive: item.isNewsViaEmailActive
             };
         }
-        catch {
+        catch (error) {
+            console.error(`Failed to load stock data for ${item.symbol}:`, error);
             return {
                 company: item.company,
                 symbol: item.symbol,
+                currentPrice: null,
+                priceFormatted: '—',
+                changeFormatted: '—',
+                changePercent: null,
+                marketCap: '—',
+                peRatio: '—',
                 isNewsViaEmailActive: item.isNewsViaEmailActive
             };
         }

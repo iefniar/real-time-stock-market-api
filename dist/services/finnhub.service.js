@@ -109,34 +109,45 @@ export async function searchStocks(query, watchlistSymbols = []) {
     }
 }
 export async function getStocksDetails(symbol) {
-    try {
-        if (!FINNHUB_API_KEY) {
-            throw new Error('FINNHUB_API_KEY missing');
-        }
-        const cleanSymbol = symbol.trim().toUpperCase();
-        const [quote, profile, financials] = await Promise.all([
-            fetchJSON(`${FINNHUB_BASE_URL}/quote?symbol=${cleanSymbol}&token=${FINNHUB_API_KEY}`),
-            fetchJSON(`${FINNHUB_BASE_URL}/stock/profile2?symbol=${cleanSymbol}&token=${FINNHUB_API_KEY}`),
-            fetchJSON(`${FINNHUB_BASE_URL}/stock/metric?symbol=${cleanSymbol}&metric=all&token=${FINNHUB_API_KEY}`)
-        ]);
-        if (!quote?.c || !profile?.name) {
-            throw new Error('Invalid stock data received from Finnhub');
-        }
-        const changePercent = quote.dp ?? 0;
-        const peRatio = financials?.metric?.peNormalizedAnnual;
-        return {
-            symbol: cleanSymbol,
-            company: profile.name,
-            currentPrice: quote.c,
-            changePercent,
-            priceFormatted: formatPrice(quote.c),
-            changeFormatted: formatChangePercent(changePercent),
-            peRatio: peRatio != null ? peRatio.toFixed(1) : '—',
-            marketCapFormatted: formatMarketCapValue(profile.marketCapitalization ?? 0)
-        };
+    if (!FINNHUB_API_KEY) {
+        throw new Error('FINNHUB_API_KEY missing');
     }
-    catch (error) {
-        console.error(`getStocksDetails(${symbol}):`, error);
-        throw error;
+    const cleanSymbol = symbol.trim().toUpperCase();
+    const results = await Promise.allSettled([
+        fetchJSON(`${FINNHUB_BASE_URL}/quote?symbol=${cleanSymbol}&token=${FINNHUB_API_KEY}`),
+        fetchJSON(`${FINNHUB_BASE_URL}/stock/profile2?symbol=${cleanSymbol}&token=${FINNHUB_API_KEY}`),
+        fetchJSON(`${FINNHUB_BASE_URL}/stock/metric?symbol=${cleanSymbol}&metric=all&token=${FINNHUB_API_KEY}`)
+    ]);
+    const [quoteResult, profileResult, financialsResult] = results;
+    const quote = quoteResult.status === 'fulfilled' ? quoteResult.value : null;
+    const profile = profileResult.status === 'fulfilled' ? profileResult.value : null;
+    const financials = financialsResult.status === 'fulfilled' ? financialsResult.value : null;
+    // Log individual failures without destroying the entire stock response
+    if (quoteResult.status === 'rejected') {
+        console.error(`Quote request failed for ${cleanSymbol}:`, quoteResult.reason);
     }
+    if (profileResult.status === 'rejected') {
+        console.error(`Profile request failed for ${cleanSymbol}:`, profileResult.reason);
+    }
+    if (financialsResult.status === 'rejected') {
+        console.error(`Financial metrics request failed for ${cleanSymbol}:`, financialsResult.reason);
+    }
+    // Quote is the most important request. Without a valid price, we consider the stock request unsuccessful.
+    if (quote?.c == null || quote.c === 0) {
+        throw new Error(`No valid quote data received for ${cleanSymbol}`);
+    }
+    const changePercent = quote.dp ?? 0;
+    const peRatio = financials?.metric?.peNormalizedAnnual;
+    return {
+        symbol: cleanSymbol,
+        company: profile?.name ?? cleanSymbol,
+        currentPrice: quote.c,
+        changePercent,
+        priceFormatted: formatPrice(quote.c),
+        changeFormatted: formatChangePercent(changePercent),
+        peRatio: peRatio != null ? peRatio.toFixed(1) : '—',
+        marketCapFormatted: profile?.marketCapitalization != null
+            ? formatMarketCapValue(profile.marketCapitalization)
+            : '—'
+    };
 }

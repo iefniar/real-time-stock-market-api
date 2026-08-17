@@ -137,18 +137,36 @@ export async function getWatchlistWithData (userId: string) {
         return {
           company: stock.company,
           symbol: stock.symbol,
+
           currentPrice: stock.currentPrice,
           priceFormatted: stock.priceFormatted,
+
           changeFormatted: stock.changeFormatted,
           changePercent: stock.changePercent,
+
           marketCap: stock.marketCapFormatted,
+
           peRatio: stock.peRatio,
+
           isNewsViaEmailActive: item.isNewsViaEmailActive
         }
-      } catch {
+      } catch (error) {
+        console.error(`Failed to load stock data for ${item.symbol}:`, error)
+
         return {
           company: item.company,
           symbol: item.symbol,
+
+          currentPrice: null,
+          priceFormatted: '—',
+
+          changeFormatted: '—',
+          changePercent: null,
+
+          marketCap: '—',
+
+          peRatio: '—',
+
           isNewsViaEmailActive: item.isNewsViaEmailActive
         }
       }
