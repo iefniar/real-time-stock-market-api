@@ -28,16 +28,19 @@ export const auth = betterAuth({
         revokeSessionsOnPasswordReset: true, // Invalidate every session after a successful password reset
         resetPasswordTokenExpiresIn: 60 * 60, // Password reset link expires after 1 hour
         async sendResetPassword({ user, url }) {
+            // Second check: Make sure we still have permission to actually send an email.
             const allowed = await canProceed('passwordReset');
             if (!allowed) {
                 console.warn(`Password reset email limit reached for ${user.email}.`);
                 return;
             }
+            // Send the actual email
             await sendResetPasswordEmail({
                 email: user.email,
                 name: user.name,
                 resetPasswordUrl: url
             });
+            // Only increment after Nodemailer successfully completes.
             await incrementCounter('passwordReset');
             await incrementCounter('total');
         }

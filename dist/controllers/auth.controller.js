@@ -95,6 +95,14 @@ export async function forgotPassword(req, res) {
                 error: 'Email is required.'
             });
         }
+        // First check: Prevent Better Auth from creating another verification document when the daily limit has already been reached.
+        const allowed = await canProceed('passwordReset');
+        if (!allowed) {
+            return res.status(429).json({
+                success: false,
+                error: 'The daily password reset limit has been reached. Please try again tomorrow.'
+            });
+        }
         // Convert Express headers to Fetch Headers
         const headers = new Headers();
         for (const [key, value] of Object.entries(req.headers)) {
