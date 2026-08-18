@@ -167,85 +167,78 @@ export async function searchStocks (
 }
 
 export async function getStocksDetails (symbol: string) {
-  if (!FINNHUB_API_KEY) {
-    throw new Error('FINNHUB_API_KEY missing')
-  }
+  try {
+    if (!FINNHUB_API_KEY) {
+      throw new Error('FINNHUB_API_KEY missing')
+    }
 
-  const cleanSymbol = symbol.trim().toUpperCase()
+    const cleanSymbol = symbol.trim().toUpperCase()
 
-  const results = await Promise.allSettled([
-    fetchJSON<any>(
-      `${FINNHUB_BASE_URL}/quote?symbol=${cleanSymbol}&token=${FINNHUB_API_KEY}`
-    ),
+    const [quoteResult, profileResult, financialsResult] =
+      await Promise.allSettled([
+        fetchJSON<any>(
+          `${FINNHUB_BASE_URL}/quote?symbol=${cleanSymbol}&token=${FINNHUB_API_KEY}`
+        ),
 
-    fetchJSON<any>(
-      `${FINNHUB_BASE_URL}/stock/profile2?symbol=${cleanSymbol}&token=${FINNHUB_API_KEY}`
-    ),
+        fetchJSON<any>(
+          `${FINNHUB_BASE_URL}/stock/profile2?symbol=${cleanSymbol}&token=${FINNHUB_API_KEY}`
+        ),
 
-    fetchJSON<any>(
-      `${FINNHUB_BASE_URL}/stock/metric?symbol=${cleanSymbol}&metric=all&token=${FINNHUB_API_KEY}`
-    )
-  ])
+        fetchJSON<any>(
+          `${FINNHUB_BASE_URL}/stock/metric?symbol=${cleanSymbol}&metric=all&token=${FINNHUB_API_KEY}`
+        )
+      ])
 
-  const [quoteResult, profileResult, financialsResult] = results
+    // Quote is required because Price and Change depend on it.
+    if (quoteResult.status === 'rejected') {
+      throw new Error(
+        `Failed to fetch quote for ${cleanSymbol}: ${quoteResult.reason}`
+      )
+    }
 
-  const quote = quoteResult.status === 'fulfilled' ? quoteResult.value : null
+    // Profile is required for company name and market cap.
+    if (profileResult.status === 'rejected') {
+      throw new Error(
+        `Failed to fetch profile for ${cleanSymbol}: ${profileResult.reason}`
+      )
+    }
 
-  const profile =
-    profileResult.status === 'fulfilled' ? profileResult.value : null
+    const quote = quoteResult.value
+    const profile = profileResult.value
 
-  const financials =
-    financialsResult.status === 'fulfilled' ? financialsResult.value : null
+    const financials =
+      financialsResult.status === 'fulfilled' ? financialsResult.value : null
 
-  // Log individual failures without destroying the entire stock response
-  if (quoteResult.status === 'rejected') {
-    console.error(
-      `Quote request failed for ${cleanSymbol}:`,
-      quoteResult.reason
-    )
-  }
+    if (!quote?.c || !profile?.name) {
+      throw new Error(`Invalid stock data received for ${cleanSymbol}`)
+    }
 
-  if (profileResult.status === 'rejected') {
-    console.error(
-      `Profile request failed for ${cleanSymbol}:`,
-      profileResult.reason
-    )
-  }
+    const changePercent = quote.dp ?? 0
 
-  if (financialsResult.status === 'rejected') {
-    console.error(
-      `Financial metrics request failed for ${cleanSymbol}:`,
-      financialsResult.reason
-    )
-  }
+    const peRatio = financials?.metric?.peNormalizedAnnual
 
-  // Quote is the most important request. Without a valid price, we consider the stock request unsuccessful.
-  if (quote?.c == null || quote.c === 0) {
-    throw new Error(`No valid quote data received for ${cleanSymbol}`)
-  }
+    return {
+      symbol: cleanSymbol,
 
-  const changePercent = quote.dp ?? 0
+      company: profile.name,
 
-  const peRatio = financials?.metric?.peNormalizedAnnual
+      currentPrice: quote.c,
 
-  return {
-    symbol: cleanSymbol,
+      changePercent,
 
-    company: profile?.name ?? cleanSymbol,
+      priceFormatted: formatPrice(quote.c),
 
-    currentPrice: quote.c,
+      changeFormatted: formatChangePercent(changePercent),
 
-    changePercent,
+      peRatio: peRatio != null ? peRatio.toFixed(1) : '—',
 
-    priceFormatted: formatPrice(quote.c),
+      marketCapFormatted: formatMarketCapValue(
+        profile.marketCapitalization ?? 0
+      )
+    }
+  } catch (error) {
+    console.error(`getStocksDetails(${symbol}):`, error)
 
-    changeFormatted: formatChangePercent(changePercent),
-
-    peRatio: peRatio != null ? peRatio.toFixed(1) : '—',
-
-    marketCapFormatted:
-      profile?.marketCapitalization != null
-        ? formatMarketCapValue(profile.marketCapitalization)
-        : '—'
+    throw error
   }
 }
